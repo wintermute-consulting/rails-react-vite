@@ -14,4 +14,4 @@ On the frontend side we have:
 
 Start the server with
 
-``yarn dev`
+``yarn dev```
