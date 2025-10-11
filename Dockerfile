@@ -2,8 +2,8 @@
 # check=error=true
 
 # This Dockerfile is designed for production, not development. Use with Kamal or build'n'run by hand:
-# docker build -t canteen_candy .
-# docker run -d -p 80:80 -e RAILS_MASTER_KEY=<value from config/master.key> --name canteen_candy canteen_candy
+# docker build -t strike_against_the_archive .
+# docker run -d -p 80:80 -e RAILS_MASTER_KEY=<value from config/master.key> --name strike_against_the_archive strike_against_the_archive
 
 # For a containerized dev environment, see Dev Containers: https://guides.rubyonrails.org/getting_started_with_devcontainer.html
 
