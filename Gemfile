@@ -42,7 +42,7 @@ gem "image_processing", "~> 1.2"
 gem "aws-sdk-s3", require: false
 
 # Frontend tooling
-gem 'vite_rails'
+gem "vite_rails"
 
 # Authentication [https://github.com/heartcombo/devise]
 gem "devise"
@@ -82,7 +82,7 @@ group :development do
   # Preview sent mail in the browser instead of delivering it [https://github.com/ryanb/letter_opener]
   gem "letter_opener"
   # Annotate models
-  gem 'annotaterb'
+  gem "annotaterb"
   # Local formatting utils
   gem "htmlbeautifier"
   gem "prettier_print"
