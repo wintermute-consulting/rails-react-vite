@@ -23,5 +23,8 @@ module StrikeAgainstTheArchive
     #
     # config.time_zone = "Central Time (US & Canada)"
     # config.eager_load_paths << Rails.root.join("extras")
+
+    # Run Active Job (including Action Mailer's deliver_later) on Sidekiq/Redis.
+    config.active_job.queue_adapter = :sidekiq
   end
 end

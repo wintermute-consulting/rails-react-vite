@@ -1,5 +1,17 @@
+require "sidekiq/web"
+
 Rails.application.routes.draw do
-  # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
+  devise_for :users, controllers: {
+    sessions: "users/sessions",
+    registrations: "users/registrations",
+    passwords: "users/passwords"
+  }
+
+  # Returns the authenticated user (or { user: nil }) for the React frontend.
+  get "current_user", to: "current_user#show"
+
+  # Sidekiq dashboard. Wrap in an authenticated constraint before going to production.
+  mount Sidekiq::Web => "/sidekiq"
 
   # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.
   # Can be used by load balancers and uptime monitors to verify that the app is live.
@@ -11,4 +23,11 @@ Rails.application.routes.draw do
 
   # Defines the root path route ("/")
   root "app#index"
+
+  # Any other HTML GET request is handed to the React SPA so client-side
+  # routing (login, signup, password reset, …) can take over.
+  get "*path", to: "app#index", constraints: ->(request) {
+    request.format.html? &&
+      !request.path.start_with?("/rails", "/sidekiq", "/users")
+  }
 end
