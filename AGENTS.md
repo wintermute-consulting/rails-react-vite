@@ -4,6 +4,12 @@
 
 Rails 8 + React 19 + Vite starter with authentication, background jobs, and cloud storage wired up.
 
+<!-- BEGIN: template setup — delete this note (and the matching README section) once the rename is done -->
+
+> **Fresh clone?** This is still the template: the app is named with the placeholder `RailsReactVite` / `rails_react_vite`. Before building features, rename it to the real project — see "Starting a new project from this template" in `README.md` — then delete this note. If you're an agent and the placeholder name is still present, ask the user what to rename it to before generating new code that hard-codes it.
+
+<!-- END: template setup -->
+
 ## Tech Stack
 
 | Layer            | Technology                                                              |
