@@ -38,10 +38,16 @@ gem "thruster", require: false
 # Use Active Storage variants [https://guides.rubyonrails.org/active_storage_overview.html#transforming-images]
 gem "image_processing", "~> 1.2"
 
-# Frontend tooling
-gem 'vite_rails'
+# Store Active Storage files on AWS S3 [https://guides.rubyonrails.org/active_storage_overview.html#amazon-s3-service]
+gem "aws-sdk-s3", require: false
 
-# Model utilities
+# Frontend tooling
+gem "vite_rails"
+
+# Authentication [https://github.com/heartcombo/devise]
+gem "devise"
+
+# JSON serialization
 gem "alba"
 
 gem "httparty"
@@ -62,13 +68,21 @@ group :development, :test do
 
   # Env variables management
   gem "dotenv-rails"
+
+  # Behavior-driven testing [https://github.com/rspec/rspec-rails]
+  gem "rspec-rails"
+
+  # A runtime developer console and IRB alternative [https://github.com/pry/pry]
+  gem "pry-rails"
 end
 
 group :development do
   # Use console on exceptions pages [https://github.com/rails/web-console]
   gem "web-console"
+  # Preview sent mail in the browser instead of delivering it [https://github.com/ryanb/letter_opener]
+  gem "letter_opener"
   # Annotate models
-  gem 'annotaterb'
+  gem "annotaterb"
   # Local formatting utils
   gem "htmlbeautifier"
   gem "prettier_print"
