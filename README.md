@@ -82,6 +82,20 @@ bundle exec rspec
 
 ```bash
 bin/rubocop                    # Ruby linting
-yarn lint                      # (npx eslint "app/frontend/**/*.js")
+bin/brakeman                   # Ruby security scan
+yarn lint                      # ESLint over app/frontend
+yarn build:vite                # production Vite build
 bundle exec annotaterb models  # refresh model schema annotations
 ```
+
+## Continuous integration
+
+`.github/workflows/ci.yml` runs on every pull request and push to `main`:
+
+- **scan_ruby** — Brakeman security scan
+- **lint** — RuboCop
+- **frontend** — ESLint + `vite build`
+- **test** — RSpec against a Postgres service
+
+There are no system/browser tests yet; add `test:system` (and a browser)
+back to the `test` job if you introduce them.

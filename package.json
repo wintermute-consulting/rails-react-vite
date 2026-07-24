@@ -5,6 +5,7 @@
     "build": "esbuild app/frontend/*.* --bundle --sourcemap --format=esm --outdir=app/assets/builds --public-path=/assets",
     "build:css": "npx @tailwindcss/cli -i ./app/assets/stylesheets/application.tailwind.css -o ./app/assets/builds/application.css --minify",
     "dev": "bin/dev",
+    "build:vite": "vite build",
     "lint": "eslint \"app/frontend/**/*.js\"",
     "format": "prettier --write \"app/frontend/**/*.js\""
   },
