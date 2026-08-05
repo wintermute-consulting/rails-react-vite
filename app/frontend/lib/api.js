@@ -1,5 +1,15 @@
+function csrfMetaTag() {
+  return document.querySelector('meta[name="csrf-token"]');
+}
+
 function csrfToken() {
-  return document.querySelector('meta[name="csrf-token"]')?.content;
+  return csrfMetaTag()?.content;
+}
+
+function updateCsrfToken(res) {
+  const token = res.headers.get("X-CSRF-Token");
+  const meta = csrfMetaTag();
+  if (token && meta) meta.content = token;
 }
 
 async function request(url, { method = "GET", body } = {}) {
@@ -13,6 +23,8 @@ async function request(url, { method = "GET", body } = {}) {
     body: body ? JSON.stringify(body) : undefined,
     credentials: "same-origin",
   });
+
+  updateCsrfToken(res);
 
   const isJson = res.headers.get("content-type")?.includes("application/json");
   const data = isJson ? await res.json() : null;
