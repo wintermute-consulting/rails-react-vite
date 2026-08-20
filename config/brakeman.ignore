@@ -1,0 +1,12 @@
+{
+  "ignored_warnings": [
+    {
+      "fingerprint": "21ab0fe00fdd5899ffc405cff75aadb91b805ee996a614f7e27b08a287e9062d",
+      "check_name": "EOLRails",
+      "message": "Support for Rails 8.0.2 ends on 2026-10-07",
+      "file": "Gemfile.lock",
+      "note": "Advisory, not a vulnerability: an upcoming EOL date should not gate deploys. The fingerprint covers this exact message, so a Rails upgrade or the actual end-of-support wording will surface as a new warning."
+    }
+  ],
+  "brakeman_version": "8.0.5"
+}
