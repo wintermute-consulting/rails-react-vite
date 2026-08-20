@@ -18,7 +18,7 @@ Rails 8 + React 19 + Vite starter with authentication, background jobs, and clou
 | Asset pipeline   | Propshaft + jsbundling-rails (esbuild) + cssbundling-rails + vite_rails |
 | Frontend         | React 19, Vite 5, Tailwind CSS 4.3, Heroicons, React Router            |
 | Auth             | Devise (JSON endpoints + React views)                                  |
-| Background jobs  | Sidekiq on Redis (Active Job adapter)                                  |
+| Background jobs  | Solid Queue on PostgreSQL (Active Job adapter)                         |
 | Caching / Cable  | Solid Cache, Solid Cable                                               |
 | Storage          | Active Storage → AWS S3 (production), local disk (development)         |
 | Serialization    | Alba                                                                    |
@@ -30,8 +30,8 @@ Rails 8 + React 19 + Vite starter with authentication, background jobs, and clou
 
 ## Development
 
-- Copy `.env.example` to `.env` and fill in values. **Redis must be running** for Sidekiq.
-- `bin/dev` (or `yarn dev`) runs `Procfile.dev` via foreman: `rails server`, `yarn build --watch` (esbuild), `yarn build:css --watch` (Tailwind CLI), `bin/vite dev` (HMR), and `sidekiq` (worker). All are required.
+- Copy `.env.example` to `.env` and fill in values.
+- `bin/dev` (or `yarn dev`) runs `Procfile.dev` via foreman: `rails server`, `yarn build --watch` (esbuild), `yarn build:css --watch` (Tailwind CLI), `bin/vite dev` (HMR), and `bin/jobs` (Solid Queue worker). All are required.
 - Tests: `bundle exec rspec`. Models are annotated with `bundle exec annotaterb models`.
 
 ## Frontend Conventions
@@ -44,9 +44,12 @@ Rails 8 + React 19 + Vite starter with authentication, background jobs, and clou
 - Tailwind 4 via `@tailwindcss/vite` (dev HMR) and `@tailwindcss/cli` (prod build from `app/assets/stylesheets/application.tailwind.css`). `prettier-plugin-tailwindcss` sorts classes — don't reorder by hand.
 - Icons come from `@heroicons/react` (e.g. `import { LockClosedIcon } from "@heroicons/react/24/outline"`).
 - New pages are client-side routes inside React (React Router in `app/frontend/components/App.js`), not ERB views. Any HTML `GET` not owned by Rails falls through to the SPA (see the catch-all in `config/routes.rb`).
+- User-facing strings go through `t()` from `~/i18n`; add keys to `app/frontend/i18n/locales/{en,fr}.js`. Locale is detected once at import time from the browser; `?lang=fr` forces it.
+- Read boolean query-string toggles with `useQueryFlag("present")` rather than parsing `location.search` directly — it stays in sync when another component rewrites the URL.
 
 ## Auth Conventions
 
+- A site-wide password gate sits in front of everything, independent from Devise. `SitePasswordProtection` (included in `ApplicationController`) redirects HTML requests to `/unlock` and returns `401` JSON until the visitor submits `ENV["PASSWORD"]`; the unlocked state is a digest stored in the Rails session. Blank/unset `PASSWORD` disables the gate entirely, which is the default.
 - Devise is API-style: custom controllers under `app/controllers/users/` (`sessions`, `registrations`, `passwords`) respond with JSON, not HTML.
 - Failed authentication returns `401 { error: … }` via `JsonFailureApp` (defined in `config/initializers/devise.rb`) instead of redirecting.
 - The React frontend talks to Devise through `app/frontend/lib/api.js` (adds the CSRF token + `Accept: application/json`) and `app/frontend/lib/auth.js` (`AuthProvider` / `useAuth`). `GET /current_user` returns the signed-in user.
@@ -56,7 +59,7 @@ Rails 8 + React 19 + Vite starter with authentication, background jobs, and clou
 
 - Follow `rubocop-rails-omakase`.
 - Controllers stay thin; keep business logic in models.
-- Jobs in `app/jobs/` call a single method on a model or service; they run on Sidekiq/Redis.
+- Jobs in `app/jobs/` call a single method on a model or service; they run on Solid Queue, backed by the primary Postgres database.
 - Serialize JSON with Alba (see `app/serializers/`).
 - Use Solid Cache for caching and Solid Cable for Action Cable.
 
@@ -65,3 +68,9 @@ Rails 8 + React 19 + Vite starter with authentication, background jobs, and clou
 - Prefer clarity over cleverness.
 - No commented-out code or debug logs.
 - Keep this file short — expand it as real patterns emerge in the project.
+
+## Comments
+
+- Default to no comments; well-named code speaks for itself.
+- One line max. Never multi-line blocks or paragraph explanations.
+- Only write one for a non-obvious WHY: a hidden constraint, a subtle invariant, a workaround. Never explain WHAT the code does.
