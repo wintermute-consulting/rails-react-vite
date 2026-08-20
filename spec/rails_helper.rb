@@ -35,6 +35,14 @@ rescue ActiveRecord::PendingMigrationError => e
   abort e.to_s.strip
 end
 RSpec.configure do |config|
+  # Wraps group-level `around` hooks, so specs exercising the gate can still set it.
+  config.around do |example|
+    original = ENV["PASSWORD"]
+    ENV["PASSWORD"] = nil
+    example.run
+    ENV["PASSWORD"] = original
+  end
+
   # Remove this line if you're not using ActiveRecord or ActiveRecord fixtures
   config.fixture_paths = [
     Rails.root.join('spec/fixtures')
