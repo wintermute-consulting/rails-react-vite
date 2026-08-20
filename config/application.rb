@@ -24,7 +24,8 @@ module RailsReactVite
     # config.time_zone = "Central Time (US & Canada)"
     # config.eager_load_paths << Rails.root.join("extras")
 
-    # Run Active Job (including Action Mailer's deliver_later) on Sidekiq/Redis.
-    config.active_job.queue_adapter = :sidekiq
+    # Run Active Job (including Action Mailer's deliver_later) on Solid Queue,
+    # backed by the same Postgres database as the rest of the app.
+    config.active_job.queue_adapter = :solid_queue
   end
 end

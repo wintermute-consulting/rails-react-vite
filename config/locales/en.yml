@@ -29,3 +29,9 @@
 
 en:
   hello: "Hello world"
+  gate:
+    password: "Password"
+    submit: "Enter"
+    invalid: "Incorrect password."
+    throttled: "Too many attempts. Try again later."
+    locked: "Password required."

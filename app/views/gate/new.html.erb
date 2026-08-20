@@ -1,0 +1,19 @@
+<div class="flex min-h-screen items-center justify-center bg-black px-6">
+  <div class="w-full max-w-sm">
+
+    <%= form_with url: unlock_path, method: :post, class: "mt-8 space-y-4" do |form| %>
+      <%= form.password_field :password,
+            autofocus: true,
+            autocomplete: "current-password",
+            placeholder: t("gate.password"),
+            class: "w-full rounded-md border border-white/20 bg-white/5 px-4 py-3 text-white placeholder-white/40 focus:border-white/60 focus:outline-none" %>
+
+      <% if flash[:alert].present? %>
+        <p class="text-sm text-red-400"><%= flash[:alert] %></p>
+      <% end %>
+
+      <%= form.submit t("gate.submit"),
+            class: "w-full cursor-pointer rounded-md bg-white px-4 py-3 font-medium text-black hover:bg-white/90" %>
+    <% end %>
+  </div>
+</div>

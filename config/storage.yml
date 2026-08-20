@@ -6,13 +6,18 @@ local:
   service: Disk
   root: <%= Rails.root.join("storage") %>
 
-# AWS S3. Credentials are read from the environment (see .env.example / dotenv).
+# S3-compatible object storage. Credentials come from the environment.
+# Plain AWS S3 uses AWS_BUCKET and no endpoint override. Other providers
+# (Tigris, R2, MinIO, …) set AWS_ENDPOINT_URL_S3, and some inject BUCKET_NAME.
 amazon:
   service: S3
   access_key_id: <%= ENV["AWS_ACCESS_KEY_ID"] %>
   secret_access_key: <%= ENV["AWS_SECRET_ACCESS_KEY"] %>
-  region: <%= ENV.fetch("AWS_REGION", "us-east-1") %>
-  bucket: <%= ENV["AWS_BUCKET"] %>
+  region: <%= ENV.fetch("AWS_REGION", "auto") %>
+  bucket: <%= ENV["BUCKET_NAME"] || ENV["AWS_BUCKET"] %>
+<% if ENV["AWS_ENDPOINT_URL_S3"].present? %>
+  endpoint: <%= ENV["AWS_ENDPOINT_URL_S3"] %>
+<% end %>
 
 # Remember not to checkin your GCS keyfile to a repository
 # google:

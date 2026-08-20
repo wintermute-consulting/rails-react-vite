@@ -1,5 +1,3 @@
-require "sidekiq/web"
-
 Rails.application.routes.draw do
   devise_for :users, controllers: {
     sessions: "users/sessions",
@@ -7,11 +5,13 @@ Rails.application.routes.draw do
     passwords: "users/passwords"
   }
 
+  # Server-side password gate (see SitePasswordProtection). No-op unless the
+  # PASSWORD env var is set.
+  get "unlock", to: "gate#new"
+  post "unlock", to: "gate#create"
+
   # Returns the authenticated user (or { user: nil }) for the React frontend.
   get "current_user", to: "current_user#show"
-
-  # Sidekiq dashboard. Wrap in an authenticated constraint before going to production.
-  mount Sidekiq::Web => "/sidekiq"
 
   # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.
   # Can be used by load balancers and uptime monitors to verify that the app is live.
@@ -28,6 +28,6 @@ Rails.application.routes.draw do
   # routing (login, signup, password reset, …) can take over.
   get "*path", to: "app#index", constraints: ->(request) {
     request.format.html? &&
-      !request.path.start_with?("/rails", "/sidekiq", "/users")
+      !request.path.start_with?("/rails", "/users")
   }
 end
