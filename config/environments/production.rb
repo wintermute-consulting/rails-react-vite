@@ -49,8 +49,9 @@ Rails.application.configure do
   # Replace the default in-process memory cache store with a durable alternative.
   config.cache_store = :solid_cache_store
 
-  # Active Job runs on Sidekiq/Redis (configured in config/application.rb and
-  # config/initializers/sidekiq.rb). Set REDIS_URL in the environment.
+  # Active Job runs on Solid Queue (config/queue.yml), using the primary
+  # database. Run workers with `bin/jobs`, or in-process by setting
+  # SOLID_QUEUE_IN_PUMA=true.
 
   # Ignore bad email addresses and do not raise email delivery errors.
   # Set this to true and configure the email server for immediate delivery to raise delivery errors.

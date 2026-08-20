@@ -17,7 +17,9 @@ default: &default
   encoding: unicode
   # For details on connection pooling, see Rails configuration guide
   # https://guides.rubyonrails.org/configuring.html#database-pooling
-  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+  # DB_POOL is separate from RAILS_MAX_THREADS so Solid Queue's own thread
+  # needs (see queue.yml) don't get starved by Puma's thread count.
+  pool: <%= ENV.fetch("DB_POOL") { ENV.fetch("RAILS_MAX_THREADS") { 5 } } %>
 
 development:
   <<: *default
@@ -77,21 +79,9 @@ test:
 # Read https://guides.rubyonrails.org/configuring.html#configuring-a-database
 # for a full overview on how database connection configuration can be specified.
 #
+# A single database backs everything in production: application data, Solid Cache,
+# Solid Queue and Solid Cable.
+# DATABASE_URL, when present, overrides the values below.
 production:
-  primary: &primary_production
-    <<: *default
-    database: rails_react_vite_production
-    username: rails_react_vite
-    password: <%= ENV["rails_react_vite_DATABASE_PASSWORD"] %>
-  cache:
-    <<: *primary_production
-    database: rails_react_vite_production_cache
-    migrations_paths: db/cache_migrate
-  queue:
-    <<: *primary_production
-    database: rails_react_vite_production_queue
-    migrations_paths: db/queue_migrate
-  cable:
-    <<: *primary_production
-    database: rails_react_vite_production_cable
-    migrations_paths: db/cable_migrate
+  <<: *default
+  database: rails_react_vite_production
